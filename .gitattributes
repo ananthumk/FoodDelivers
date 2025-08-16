@@ -1,0 +1,34 @@
+# Ensure all text files use LF for line endings (consistent across OS)
+* text=auto
+
+# Treat JavaScript files as text
+*.js   text
+*.jsx  text
+*.ts   text
+*.tsx  text
+
+# Treat CSS and HTML files as text
+*.css  text
+*.scss text
+*.html text
+
+# Treat JSON, Markdown, and other config files as text
+*.json  text
+*.md    text
+*.yml   text
+*.yaml  text
+
+# Prevent binary files from being converted
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.ico  binary
+*.pdf  binary
+
+# Mark lock files or archives as binary too
+*.zip  binary
+*.tar  binary
+
+# (Optional) Add custom diff highlighting for specific types
+*.md   diff=markdown
