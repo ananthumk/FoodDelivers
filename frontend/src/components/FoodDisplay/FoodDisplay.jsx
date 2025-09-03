@@ -6,6 +6,15 @@ import FoodItem from '../FoodItem/FoodItem'
 
 const FoodDisplay = ({ category }) => {
   const { foodList } = useContext(StoreContext)
+
+  if(!foodList || foodList.length === 0) {
+    return (
+      <div className="food-display-loader">
+         <div className='spinner'></div>
+         <p>Please wait a moment</p>
+      </div>
+    )
+  }
   return (
     <div className='food-display' id='food-display'>
       <h2>Top Dishes near you</h2>

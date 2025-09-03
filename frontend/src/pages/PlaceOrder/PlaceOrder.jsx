@@ -24,8 +24,8 @@ const PlaceOrder = () => {
     setData({...data,[name]: value})
   }
 
-  const onsubmitHandlers = async (event) => {
-     event.preventDefault()
+  const onsubmitHandlers = async () => {
+    //  event.preventDefault()
      let orderItems = []
 
      foodList.map((item) => {
@@ -42,6 +42,7 @@ const PlaceOrder = () => {
       }
 
       const response = await axios.post(`${url}/api/order/place`, orderData, {headers:{token}});
+      console.log(response)
       if(response.data.success){
         const {session_url} = response.data
         window.location.replace(session_url)
@@ -89,7 +90,7 @@ const PlaceOrder = () => {
                     <b>Total</b>
                     <b>${totalCartAmount() === 0 ? '0' : totalCartAmount() + 2}</b>
                 </div>
-                <button type="submit">PROCEED TO PAYMENT</button>
+                <button onClick={onsubmitHandlers} type="submit">PROCEED TO PAYMENT</button>
         </div>
     </div>
   )
