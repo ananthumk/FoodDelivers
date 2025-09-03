@@ -1,11 +1,11 @@
 import express from 'express';
-import cors from 'cors';    
+import cors from 'cors';   
+import 'dotenv/config' 
 import { connectDB } from './config/db.js'; 
 import foodRouter from './routes/foodRoute.js';
 import userRouter from './routes/userRoutes.js';
-import orderRouter from './routes/orderRouter.js';
+import orderRouter from './routes/orderRoutes.js';
 
-import 'dotenv/config'
 import cartRouter from './routes/cartRoutes.js';
 
 // app config 

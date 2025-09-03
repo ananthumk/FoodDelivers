@@ -1,5 +1,5 @@
-import orderModel from "../models/orderModels";
-import userModel from "../models/userModels";
+import orderModel from "../models/orderModels.js";
+import userModel from "../models/userModel.js"; 
 import Stripe from "stripe";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
@@ -8,7 +8,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
 const placeOrder = async ( req, res ) => {
     try {
         
-        const frontend_url = 'https://fooddeliveringapp.vercel.app/'
+        const frontend_url = 'https://foodsdeliveringapp.vercel.app/'
 
         const newOrder =  new orderModel({
             userId: req.userId,
@@ -17,15 +17,15 @@ const placeOrder = async ( req, res ) => {
             address: req.body.address,
         })
         await newOrder.save()
-        await userModel.findByIdAndUpdate(req.body.userId, {cartData: {}})
+        await userModel.findByIdAndUpdate(req.userId, {cartData: {}})
 
         const line_items = req.body.items.map((item) => ({
             price_data: {
                 currency: "inr",
                 product_data: {
-                    name: item.name
+                    name: item.name || "food item",
                 },
-                unit_amount: item.price *100*83
+                unit_amount: item.price * 100 * 83,
             },
             quantity: item.quantity 
         }))
@@ -56,4 +56,54 @@ const placeOrder = async ( req, res ) => {
     }
 }
 
-export { placeOrder }
+const verifyOrder = async (req , res) => {
+    const {orderId, success} = req.body;
+    
+    try {
+        if(success){
+            await orderModel.findByIdAndUpdate(orderId, {payment: true})
+            res.json({success: true, message: "Paid"})
+        } else {
+            await orderModel.findByIdAndDelete(orderId)
+            res.json({success: false, message: "Not paid"})
+        }
+        
+    } catch (error) {
+        console.log(error)
+        res.json({success: false, message: "Internal server error"})
+    }
+} 
+
+const fetchOrder = async (req, res) => {
+    try {
+        const orders = await orderModel.find({userId: req.userId})
+        res.json({success: true, orders})
+    } catch (error) {
+        console.log(error)
+        res.json({success: false, message: "Error"})
+    }
+}
+
+//List of ORDER
+const listOrder = async ( req, res) => {
+    try {
+        const orders = await orderModel.find({})
+        res.json({success: true, data: orders})
+    } catch (error) {
+        console.log(error)
+        res.json({success: false, message: "Error"})
+    }
+}
+
+//update order status 
+const updateOrderStatus = async ( req, res) => {
+    try {
+        await orderModel.findByIdAndUpdate(req.body.orderId, {status: req.body.status})
+        res.json({success: true, message: "Order status updated"})
+    } catch (error) {
+        console.log(error)
+        res.json({success: false, message: "Error"})
+    }
+}
+
+export { placeOrder , verifyOrder, fetchOrder, listOrder, updateOrderStatus };
