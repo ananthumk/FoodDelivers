@@ -40,7 +40,8 @@ const createToken = (id) => {
 
 //Register user 
 export const registerUser = async(req, res) => {
-   const {name, email, password} = req.body;
+    try {
+        const {name, email, password} = req.body;
 
    const userExists = await userModel.findOne({email})
    if(userExists){
@@ -50,7 +51,7 @@ export const registerUser = async(req, res) => {
    if(!validator.isEmail(email)){
        return res.status(400).json({success: false,message: 'Invalid email'})
    }
-   if(len(password) === 0){
+   if(password.length === 0){
          return res.status(400).json({success: false,message: 'Enter a  password'})
    }
 
@@ -67,4 +68,9 @@ export const registerUser = async(req, res) => {
 
    const token = createToken(user._id) 
    return res.status(200).json({success: true, token})
+    } catch (error) {
+        console.log("Registration error:", error)       
+        return res.status(500).json({success: false, message: 'Internal server error'})
+    }
+   
 }
