@@ -80,7 +80,7 @@ const Navbar = ({ setLoginPopUp }) => {
             {showProfile && (
               <div className="profile-sub">
                 <ul>
-                  <li>
+                  <li onClick={() => navigate('/myorders')}>
                     <img src={assets.bag_icon} alt="Orders" />
                     Orders
                   </li>

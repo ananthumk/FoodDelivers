@@ -12,9 +12,15 @@
     margin-right: 80px;
 }
 
-.user-details-input{
+.user-inputs-container{
     display: flex;
     flex-direction: column;
+    gap: 20px;
+}
+
+.user-details-input{
+    display: flex;
+    align-items: flex-start;
     gap: 20px;
     margin-top: 20px;
 }
@@ -68,5 +74,9 @@
     }
     .user-details-container{
         width: 100%;
+    }
+    .user-details-input{
+        display: flex;
+        flex-direction: column;
     }
 }

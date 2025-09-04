@@ -9,7 +9,8 @@ const StoreContextProvider = ({ children }) => {
     const [cartItems, setCartItems ] = useState({});
     const [foodList, setFoodList ] = useState([]);
     const [token, setToken] = useState('');
-    const url = 'https://fooddelivering.onrender.com';
+    // const url = 'https://fooddelivering.onrender.com';
+    const url = 'http://localhost:4000'
 
     useEffect(() => {
         console.log("Cart Items:", cartItems);

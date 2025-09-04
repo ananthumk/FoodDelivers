@@ -1,7 +1,8 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import './PlaceOrder.css'
 import { StoreContext } from '../../context/StoreContext'
 import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
 
 const PlaceOrder = () => {
 
@@ -24,14 +25,26 @@ const PlaceOrder = () => {
     setData({...data,[name]: value})
   }
 
-  const onsubmitHandlers = async () => {
-    //  event.preventDefault()
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if(!token) {
+       navigate('/cart')
+    } else if (totalCartAmount() === 0) {
+      navigate('/cart')
+    }
+  }, [token])
+
+  const onsubmitHandlers = async (event) => {
+     event.preventDefault()
      let orderItems = []
+     
+     console.log('Button clicked to payament')
 
      foodList.map((item) => {
-      if(cartItems[item.id] > 0) {
+      if(cartItems[item._id] > 0) {
         const itemInfo = item
-        itemInfo['quantity'] = cartItems[item.id]  
+        itemInfo['quantity'] = cartItems[item._id]  
         orderItems.push(itemInfo)
       }})
 
@@ -42,7 +55,8 @@ const PlaceOrder = () => {
       }
 
       const response = await axios.post(`${url}/api/order/place`, orderData, {headers:{token}});
-      console.log(response)
+      console.log(response);
+      
       if(response.data.success){
         const {session_url} = response.data
         window.location.replace(session_url)
@@ -57,6 +71,7 @@ const PlaceOrder = () => {
        <div className="user-details-container">
         <h2>Delivery Information</h2>
         <form onSubmit={onsubmitHandlers} className="user-details-input">
+        <div className="user-inputs-container">
           <div className="two-input-container">
             <input onChange={onChangeHandlers} name="firstName" value={data.firstName} type="text" placeholder='Frist name' required />
             <input onChange={onChangeHandlers} name="lastName" value={data.lastName} type="text" placeholder='Last name' required/>
@@ -72,9 +87,8 @@ const PlaceOrder = () => {
             <input onChange={onChangeHandlers} name="country" value={data.country} type="text" placeholder='Country' required/>
           </div>
           <input onChange={onChangeHandlers} name="phone" value={data.phone} type="text" placeholder='Phone' required />
-        </form>
-       </div>
-       <div className="cart-left-bottom">
+          </div>
+          <div className="cart-left-bottom">
             <h2>Cart Totals</h2>
                 <div>
                     <p>Subtotal</p>
@@ -90,11 +104,13 @@ const PlaceOrder = () => {
                     <b>Total</b>
                     <b>${totalCartAmount() === 0 ? '0' : totalCartAmount() + 2}</b>
                 </div>
-                <button onClick={onsubmitHandlers} type="submit">PROCEED TO PAYMENT</button>
+                <button type="submit">PROCEED TO PAYMENT</button>
         </div>
+        </form>
+       </div>
+       
     </div>
   )
 }
 
 export default PlaceOrder
-
