@@ -9,7 +9,7 @@ const placeOrder = async ( req, res ) => {
     try {
         
         // const frontend_url = 'https://foodsdeliveringapp.vercel.app/'
-        const frontend_url = 'http://localhost:5173'
+        const frontend_url = 'https://tomatoapp-six.vercel.app'
 
 
         const newOrder =  new orderModel({
